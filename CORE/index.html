@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"> 
+  <style>
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 32px;
+      font-weight: 400;
+      word-spacing: 1px;
+    }
+    h3 {
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      word-spacing: 1px;
+    }
+    </style>
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-main class="red">
+        <v-container>
+          <v-form>
+            <h1 
+            align="center"  
+            class="white--text mb-2">CORE Tech Service Work Order Form</h1>
+            <!-- ***ACCOUNT INFORMATION*** -->
+            <v-sheet
+            color="white"
+            class="pa-4 ma-8"
+            >
+            <h2
+            class="mb-4">Account Information</h2>
+            <v-divider></v-divider>
+            <v-row class="mt-4" align="center">
+              <!-- <v-col cols="3"> -->
+                <h3 class="pa-2 mr-8 mt-4">KFS Account Number</h3>
+              <!-- </v-col> -->
+              <!-- <v-col cols="6" class="ml-auto"> -->
+                <v-text-field
+                v-model="accountNumber"
+                placeholder="KFS#"
+                class="pa-2 mr-8 mt-4"
+                filled
+                dense></v-text-field>
+              <!-- </v-col> -->
+            </v-row>
+            <v-row align="center">
+              <!-- <v-col> -->
+                <h3 class="pa-2 mr-8 mt-4">Account Contact</h3>
+              <!-- </v-col> -->
+              <!-- <v-col cols=3 class="ml-auto"> -->
+                <v-text-field
+                placeholder="Name"
+                class="pa-2 mr-8 mt-4"
+                filled
+                dense></v-text-field>
+              <!-- </v-col> -->
+              <!-- <v-col cols="3"> -->
+                <v-text-field
+                placeholder="Department"
+                class="pa-2 mr-8 mt-4"
+                filled
+                dense></v-text-field>
+              <!-- </v-col> -->
+              <!-- <v-col cols="3"> -->
+                <v-text-field
+                placeholder="Phone"
+                class="pa-2 mr-8 mt-4"
+                filled
+                dense></v-text-field>
+              <!-- </v-col> -->
+            </v-row>
+            <v-row align="center">
+              <v-col cols="6">
+                <v-text-field
+              placeholder="Account Email"
+              filled
+              dense></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field
+              placeholder="Campus Address"
+              filled
+              dense></v-text-field>
+              </v-col>
+              
+            </v-row>
+            </v-sheet>
+            <!-- ***REQUEST DETAILS*** -->
+            <v-sheet
+            color="white"
+            class="pa-4 ma-8"
+            >
+            <h2
+            class="mb-4">Request Details</h2>
+            <v-divider></v-divider>
+            <v-row class="mt-4" align="center">
+              <h3 class="pa-2 mt-4 mr-8">Type (IE: Cabinet, lens, printer)</h3>
+              <v-text-field
+              class="pa-2 mt-4 mr-4"
+              placeholder="Type"
+              filled
+              dense
+              ></v-text-field>
+            </v-row>
+            <v-row align="center">
+              <h3 class="pa-2 mt-4 mr-8">Cost Estimate (Optional)</h3>
+              <v-text-field
+              class="pa-2 mt-4 mr-4"
+              placeholder="0"
+              filled
+              dense></v-text-field>
+            </v-row>
+            <v-row align="center">
+              <h3 class="pa-2 mt-4 mr-8">TFS Unit</h3>
+              <v-select
+              v-model="tfsUnit"
+              :items="tfsUnits"
+              class="pa-2 mt-4 mr-4"
+              filled
+              dense></v-select>
+            </v-row>
+            <v-row align="center">
+              <v-text-field
+              v-model="location"
+              class="pa-2 mt-4"
+              placeholder="Location"
+              filled
+              dense></v-text-field>
+            </v-row>
+            <v-row align="center">
+              <v-textarea
+              v-model="description"
+              class="pa-2 mt-4"
+              placeholder="Description"
+              filled
+              auto-grow
+              rows="1"
+              ></v-textarea>
+            </v-row>
+            </v-sheet>
+            <!-- ***CONTACT INFORMATION*** -->
+            <v-sheet
+            color="white"
+            class="pa-4 ma-8"
+            >
+            <h2
+            class="mb-4">Contact Information</h2>
+            <v-divider></v-divider>
+            <v-row class="mt-4" align="center">
+              <v-btn class="mt-4 mr-4 pa-4" block>Copy Account Contact</v-btn>
+            </v-row>
+            <v-row class="mt-4">
+              <v-text-field
+              class="pa-2 mt-4 mr-4"
+              placeholder="Name"
+              filled
+              dense></v-text-field>
+              <v-text-field
+              class="pa-2 mt-4 mr-4"
+              placeholder="Phone"
+              filled
+              dense></v-text-field>
+              <v-text-field
+              class="pa-2 mt-4 mr-4"
+              placeholder="Email"
+              filled
+              dense></v-text-field>
+            </v-row>
+          </v-form>
+           
+            
+        </v-container>
+      </v-main>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data(){
+        return{
+          accountNumber: '',
+          accountContact:{
+              name: '',
+              department: '',
+              phone: '',
+              email: '',
+              campusAddress: ''
+            },
+            type: '',
+            costEstimate: '',
+            tfsUnit: '',
+            tfsUnits: [
+              'Glass / Mechanical',
+              'Electronics / Office Equipment',
+            ],
+            location: '',
+            description: '',
+            contactInformation:{
+              name: '',
+              phone: '',
+              email: ''
+            }
+          }
+        },
+      })
+  
+  </script>
+</body>
+</html>
+
