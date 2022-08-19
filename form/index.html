@@ -9,7 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"> 
   <style>
-
+    [v-cloak] {
+      display: none;
+    }
     
     h1 {
       font-family: 'Space Mono', monospace;
@@ -27,17 +29,19 @@
       word-spacing: 1px;
     }
     </style>
+
     <title>CORE Tech Service Work Order Form</title>
 </head>
 <body>
-  <div id="app">
+  <div id="app" v-cloak>
     <v-app>
       <v-main class="red">
         <v-container fluid >
-          <v-form>
+          <v-form ref="form">
             <h1 
             align="center"  
             class="white--text mb-2">CORE Tech Service Work Order Form</h1>
+
             <!-- ***ACCOUNT INFORMATION*** -->
             <v-sheet
             color="white"
@@ -47,60 +51,60 @@
             class="mb-4">Account Information</h2>
             <v-divider></v-divider>
             <v-row class="mt-4" align="center">
-              <!-- <v-col cols="3"> -->
-                <h3 class="pa-2 mr-8 mt-4">KFS Account Number</h3>
-              <!-- </v-col> -->
-              <!-- <v-col cols="6" class="ml-auto"> -->
-                <v-text-field
+              <h3 class="pa-2 mr-8 mt-4">KFS Account Number</h3>
+              <v-text-field
                 v-model="accountNumber"
                 placeholder="KFS#"
                 class="pa-2 mr-8 mt-4"
                 filled
-                dense></v-text-field>
-              <!-- </v-col> -->
+                dense>
+              </v-text-field>
             </v-row>
             <v-row align="center">
-              <!-- <v-col> -->
-                <h3 class="pa-2 mr-8 mt-4">Account Contact</h3>
-              <!-- </v-col> -->
-              <!-- <v-col cols=3 class="ml-auto"> -->
-                <v-text-field
+              <h3 class="pa-2 mr-8 mt-4">Account Contact</h3>
+              <v-text-field
+                v-model="accountContact.name"
                 placeholder="Name"
                 class="pa-2 mr-8 mt-4"
                 filled
-                dense></v-text-field>
-              <!-- </v-col> -->
-              <!-- <v-col cols="3"> -->
-                <v-text-field
+                dense>
+              </v-text-field>
+              <v-text-field
+                v-model="accountContact.department"
                 placeholder="Department"
                 class="pa-2 mr-8 mt-4"
                 filled
-                dense></v-text-field>
-              <!-- </v-col> -->
-              <!-- <v-col cols="3"> -->
-                <v-text-field
+                dense>
+              </v-text-field>
+              <v-text-field
+                v-model="accountContact.phone"
                 placeholder="Phone"
                 class="pa-2 mr-8 mt-4"
                 filled
-                dense></v-text-field>
-              <!-- </v-col> -->
+                dense>
+              </v-text-field>
             </v-row>
             <v-row align="center">
               <v-col cols="6">
                 <v-text-field
+                v-model="accountContact.email"
               placeholder="Account Email"
+              :rules="[rules.required, rules.email]"
               filled
-              dense></v-text-field>
+              dense>
+            </v-text-field>
               </v-col>
               <v-col cols="6">
                 <v-text-field
+                v-model="accountContact.campusAddress"
               placeholder="Campus Address"
               filled
-              dense></v-text-field>
+              dense>
+            </v-text-field>
               </v-col>
-              
             </v-row>
             </v-sheet>
+
             <!-- ***REQUEST DETAILS*** -->
             <v-sheet
             color="white"
@@ -112,19 +116,23 @@
             <v-row class="mt-4" align="center">
               <h3 class="pa-2 mt-4 mr-8">Type (IE: Cabinet, lens, printer)</h3>
               <v-text-field
+              v-model="type"
               class="pa-2 mt-4 mr-4"
               placeholder="Type"
               filled
               dense
-              ></v-text-field>
+              >
+            </v-text-field>
             </v-row>
             <v-row align="center">
               <h3 class="pa-2 mt-4 mr-8">Cost Estimate (Optional)</h3>
               <v-text-field
+              v-model="costEstimate"
               class="pa-2 mt-4 mr-4"
               placeholder="0"
               filled
-              dense></v-text-field>
+              dense>
+            </v-text-field>
             </v-row>
             <v-row align="center">
               <h3 class="pa-2 mt-4 mr-8">TFS Unit</h3>
@@ -133,7 +141,8 @@
               :items="tfsUnits"
               class="pa-2 mt-4 mr-4"
               filled
-              dense></v-select>
+              dense>
+            </v-select>
             </v-row>
             <v-row align="center">
               <v-text-field
@@ -141,7 +150,8 @@
               class="pa-2 mt-4"
               placeholder="Location"
               filled
-              dense></v-text-field>
+              dense>
+            </v-text-field>
             </v-row>
             <v-row align="center">
               <v-textarea
@@ -151,9 +161,11 @@
               filled
               auto-grow
               rows="1"
-              ></v-textarea>
+              >
+            </v-textarea>
             </v-row>
             </v-sheet>
+
             <!-- ***CONTACT INFORMATION*** -->
             <v-sheet
             color="white"
@@ -163,24 +175,32 @@
             class="mb-4">Contact Information</h2>
             <v-divider></v-divider>
             <v-row class="mt-4" align="center">
-              <v-btn class="mt-4 mr-4 pa-4" block>Copy Account Contact</v-btn>
+              <v-btn class="mt-4 mr-4 pa-4" block
+              @click="submitForm">Copy Account Contact</v-btn>
             </v-row>
             <v-row class="mt-4">
               <v-text-field
+              v-model="contactInformation.name"
               class="pa-2 mt-4 mr-4"
               placeholder="Name"
               filled
-              dense></v-text-field>
+              dense>
+            </v-text-field>
               <v-text-field
+              v-model="contactInformation.phone"
               class="pa-2 mt-4 mr-4"
               placeholder="Phone"
               filled
-              dense></v-text-field>
+              dense>
+            </v-text-field>
               <v-text-field
+              v-model="contactInformation.email"
               class="pa-2 mt-4 mr-4"
               placeholder="Email"
+              :rules="[rules.required, rules.email]"
               filled
-              dense></v-text-field>
+              dense>
+            </v-text-field>
             </v-row>
           </v-form>
            
@@ -192,7 +212,38 @@
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script>
+    
+  <!-- *** FIREBASE *** -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
+      import { getFirestore, collection, doc, addDoc, getDoc, serverTimestamp} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+  
+      
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyDZ7rndclTK8gp2QFK4ir94UMrhBwkCrR0",
+        authDomain: "cor2e-workorders.firebaseapp.com",
+        projectId: "cor2e-workorders",
+        storageBucket: "cor2e-workorders.appspot.com",
+        messagingSenderId: "399366326477",
+        appId: "1:399366326477:web:446d7028bfc95cd1ed8184",
+        measurementId: "G-JVBQJK1V14"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+      const collRef = collection(db, 'work-orders');
+    
+
+      // *** VUETIFY ***
     new Vue({
       el: '#app',
       vuetify: new Vuetify(),
@@ -219,11 +270,39 @@
               name: '',
               phone: '',
               email: ''
-            }
+            },
+            rules:{
+              required: value => !!value || 'Required',
+              email: value=> /.+@.+\..+/.test(value) || 'Valid e-mail required',
+            },
           }
         },
+        methods: {
+          submitForm(){
+            addDoc(collRef, {
+              accountNumber: this.accountNumber,
+              accountContact:{
+                name: this.accountContact.name,
+                department: this.accountContact.department,
+                phone: this.accountContact.phone,
+                email: this.accountContact.email,
+                campusAddress: this.accountContact.campusAddress
+              },
+              type: this.type,
+              costEstimate: this.costEstimate,
+              tfsUnit: this.tfsUnit,
+              location: this.location,
+              description: this.description,
+              contactInformation:{
+                name: this.contactInformation.name,
+                phone: this.contactInformation.phone,
+                email: this.contactInformation.email
+              },
+            })
+            document.querySelector('.v-form').reset();
+          },
+        },
       })
-  
   </script>
 </body>
 </html>
