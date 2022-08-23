@@ -30,7 +30,7 @@
     }
     </style>
 
-    <title>CORE Tech Service Work Order Form</title>
+    <title>COR2E Tech Service Work Order Form</title>
 </head>
 <body>
   <div id="app" v-cloak>
@@ -175,8 +175,8 @@
             class="mb-4">Contact Information</h2>
             <v-divider></v-divider>
             <v-row class="mt-4" align="center">
-              <v-btn class="mt-4 mr-4 pa-4" block
-              @click="submitForm">Copy Account Contact</v-btn>
+              <!-- <v-btn class="mt-4 mr-4 pa-4" block
+             >Copy Account Contact</v-btn> -->
             </v-row>
             <v-row class="mt-4">
               <v-text-field
@@ -202,9 +202,16 @@
               dense>
             </v-text-field>
             </v-row>
+            <v-row class="mt-4" align="center">
           </v-form>
            
             
+        </v-container>
+        <v-container>
+          <v-row align="center">
+            <v-btn class="mt-4 mb-4 mr-4 pa-4" block
+            @click="submitForm">SUBMIT</v-btn>
+          </v-row>
         </v-container>
       </v-main>
     </v-app>
@@ -220,7 +227,12 @@
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
       import { getFirestore, collection, doc, addDoc, getDoc, serverTimestamp} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
   
+      const recipients = [
+        'joel@uconn.edu',
+        'cindy.doherty@uconn.edu'
+      ]
       
+
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
     
@@ -241,6 +253,7 @@
       const analytics = getAnalytics(app);
       const db = getFirestore(app);
       const collRef = collection(db, 'work-orders');
+      const mailTrackerRef = collection(db, 'mail');
     
 
       // *** VUETIFY ***
@@ -297,6 +310,35 @@
                 name: this.contactInformation.name,
                 phone: this.contactInformation.phone,
                 email: this.contactInformation.email
+              },
+            });
+
+            addDoc(mailTrackerRef, {
+              to: recipients,
+              message: {
+                subject: `New COR2E Work Order Form Submission from ${this.accountContact.name} - ${this.accountContact.department}`,
+                html: `
+                  <h1>New Work Order</h1>
+                  <h2>Account Information</h2>
+                  <strong>KFS Number:</strong> ${this.accountNumber} <br>
+                  <strong>Name:</strong> ${this.accountContact.name} <br>
+                  <strong>Department:</strong> ${this.accountContact.department}<br>
+                  <strong>Phone:</strong> ${this.accountContact.phone} <br>
+                  <strong>Email:</strong> ${this.accountContact.email}<br>
+                  <strong>Campus Address:</strong> ${this.accountContact.campusAddress}<br>
+                  <h2>Work Order Information</h2>
+                  <strong>Type:</strong> ${this.type}<br>
+                  <strong>Cost Estimate:</strong> ${this.costEstimate}<br>
+                  <strong>TFS Unit:</strong> ${this.tfsUnit}<br>
+                  <strong>Location:</strong> ${this.location}<br>
+                  <strong>Description:</strong> ${this.description}<br>
+                  <h2>Contact Information</h2>
+                  <strong>Name:</strong> ${this.contactInformation.name}<br>
+                  <strong>Phone:</strong> ${this.contactInformation.phone}<br>
+                  <strong>Email:</strong> ${this.contactInformation.email}<br>
+                  
+
+                `,
               },
             })
             document.querySelector('.v-form').reset();
