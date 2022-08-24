@@ -225,12 +225,8 @@
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
-      import { getFirestore, collection, doc, addDoc, getDoc, serverTimestamp} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+      import { getFirestore, collection, doc, query, onSnapshot , addDoc, getDoc, serverTimestamp} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
   
-      const recipients = [
-        'joel@uconn.edu',
-        'cindy.doherty@uconn.edu'
-      ]
       
 
       // TODO: Add SDKs for Firebase products that you want to use
@@ -253,6 +249,7 @@
       const analytics = getAnalytics(app);
       const db = getFirestore(app);
       const collRef = collection(db, 'work-orders');
+      const recipientsRef = collection(db, 'recipients');
       const mailTrackerRef = collection(db, 'mail');
     
 
@@ -262,6 +259,7 @@
       vuetify: new Vuetify(),
       data(){
         return{
+          recipients:[],
           accountNumber: '',
           accountContact:{
               name: '',
@@ -290,6 +288,8 @@
             },
           }
         },
+          
+
         methods: {
           submitForm(){
             addDoc(collRef, {
@@ -314,7 +314,7 @@
             });
 
             addDoc(mailTrackerRef, {
-              to: recipients,
+              to: this.recipients,
               message: {
                 subject: `New COR2E Work Order Form Submission from ${this.accountContact.name} - ${this.accountContact.department}`,
                 html: `
@@ -344,6 +344,24 @@
             document.querySelector('.v-form').reset();
           },
         },
+         mounted(){
+          let arr = [];
+
+          const q = query(collection(db, "recipients"));
+          const unsubscribe = onSnapshot(q, (querySnapshot) => {
+
+            querySnapshot.forEach((doc) => {
+                this.recipients.push(doc.data().address);
+            });
+            console.log("Current recipients: ", this.recipients.join(", "));
+          });
+
+
+
+  
+
+
+         }
       })
   </script>
 </body>
