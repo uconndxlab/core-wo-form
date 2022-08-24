@@ -173,6 +173,11 @@
             >
             <h2
             class="mb-4">Contact Information</h2>
+            <v-switch
+              v-model="switch1"
+              @change="copyAccountContactToContactInformation"
+              label="Same as Account Contact"
+            ></v-switch>
             <v-divider></v-divider>
             <v-row class="mt-4" align="center">
               <!-- <v-btn class="mt-4 mr-4 pa-4" block
@@ -260,6 +265,7 @@
       data(){
         return{
           recipients:[],
+          switch1: false,
           accountNumber: '',
           accountContact:{
               name: '',
@@ -278,7 +284,7 @@
             location: '',
             description: '',
             contactInformation:{
-              name: '',
+              name:  '',
               phone: '',
               email: ''
             },
@@ -342,6 +348,13 @@
               },
             })
             document.querySelector('.v-form').reset();
+          },
+          copyAccountContactToContactInformation(){
+            if (this.switch1) {
+              this.contactInformation.name = this.accountContact.name;
+              this.contactInformation.phone = this.accountContact.phone;
+              this.contactInformation.email = this.accountContact.email;
+            } 
           },
         },
          mounted(){
