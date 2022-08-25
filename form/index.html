@@ -30,7 +30,7 @@
     }
     </style>
 
-    <title>COR2E Tech Service Work Order Form</title>
+    <title>COR&#178;E Tech Service Work Order Form</title>
 </head>
 <body>
   <div id="app" v-cloak>
@@ -40,7 +40,7 @@
           <v-form ref="form">
             <h1 
             align="center"  
-            class="white--text mb-2">CORE Tech Service Work Order Form</h1>
+            class="white--text mb-2">COR&#178;E Tech Service Work Order Form</h1>
 
             <!-- ***ACCOUNT INFORMATION*** -->
             <v-sheet
@@ -214,7 +214,8 @@
         </v-container>
         <v-container>
           <v-row align="center">
-            <v-btn class="mt-4 mb-4 mr-4 pa-4" block
+            <v-btn class="mt-4 mb-4 mr-4 pa-4" block x-large
+            
             @click="submitForm">SUBMIT</v-btn>
           </v-row>
         </v-container>
@@ -354,7 +355,11 @@
               this.contactInformation.name = this.accountContact.name;
               this.contactInformation.phone = this.accountContact.phone;
               this.contactInformation.email = this.accountContact.email;
-            } 
+            } else {
+              this.contactInformation.name = '';
+              this.contactInformation.phone = '';
+              this.contactInformation.email = '';
+            }
           },
         },
          mounted(){
@@ -368,11 +373,6 @@
             });
             console.log("Current recipients: ", this.recipients.join(", "));
           });
-
-
-
-  
-
 
          }
       })
