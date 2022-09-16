@@ -42,10 +42,50 @@
             align="center"  
             class="white--text mb-2">COR&#178;E Tech Service Work Order Form</h1>
 
+          <v-row justify="space-around">
+
+            <v-col
+            cols="12"
+            md="8">
+
+            <v-sheet
+            color="white"
+            v-if="dialog"
+            class="pa-5"
+            
+
+            >
+
+
+            <h2
+            class="mb-4">Success.</h2>
+            <v-divider></v-divider>
+              <v-alert
+              outlined
+              type="success"
+              text
+            >
+              Your work order has been submitted. We will contact you shortly.
+            </v-alert>
+            
+            <v-btn
+              class="mt-4 mb-4 mr-4 pa-4" block x-large
+              @click="dialog = false; this.$refs.form.reset()"
+            >
+            <v-icon left>
+              mdi-arrow-left
+            </v-icon> Submit Another
+            </v-btn>
+            </v-sheet>
+          </v-col>
+          </v-row>
+    
+
             <!-- ***ACCOUNT INFORMATION*** -->
             <v-sheet
             color="white"
             class="pa-4 ma-8"
+            v-if="!dialog"
             >
             <h2
             class="mb-4">Account Information</h2>
@@ -116,6 +156,7 @@
             <v-sheet
             color="white"
             class="pa-4 ma-8"
+            v-if="!dialog"
             >
             <h2
             class="mb-4">Request Details</h2>
@@ -177,6 +218,7 @@
             <v-sheet
             color="white"
             class="pa-4 ma-8"
+            v-if="!dialog"
             >
             <h2
             class="mb-4">Contact Information</h2>
@@ -219,14 +261,14 @@
            
             
         </v-container>
-        <v-container>
+        <v-container v-if="!dialog">
           <v-row align="center">
             <v-btn class="mt-4 mb-4 mr-4 pa-4" block x-large
             
 
             @click="submitForm">SUBMIT</v-btn>
           </v-row>
-          <!-- DIALOG -->
+          <!-- DIALOG
           <div class="text-center">
               <v-dialog
                 v-model="dialog"
@@ -234,12 +276,12 @@
               >
                
                 <v-card>
-                  <v-card-title class="text-h5 grey lighten-2">
-                    Thank you for your submission!
+                  <v-card-title class="text-h5">
+                    Work Order Submitted.
                   </v-card-title>
           
                   <v-card-text>
-                    We will review your request and get back to you as soon as possible.
+                    Your work order has been submitted.
                   </v-card-text>
           
                   <v-divider></v-divider>
@@ -251,12 +293,12 @@
                       text
                       @click="dialog = false"
                     >
-                      OK
+                      Done
                     </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-            </div>
+            </div> -->
           
          </v-container>
       </v-main>
