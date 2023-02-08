@@ -41,6 +41,7 @@
             <h1 
             align="center"  
             class="white--text mb-2">COR&#178;E Tech Service Work Order Form</h1>
+            <h4 class="white--text" align="center">Last Updated: 08 Feb 2023</h4>
 
           <v-row justify="space-around">
 
@@ -313,7 +314,7 @@
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
-      import { getFirestore, collection, doc, query, onSnapshot , addDoc, getDoc, serverTimestamp} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+      import { getFirestore, collection, doc, query, onSnapshot , addDoc, getDoc, updateDoc, serverTimestamp} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
   
       
 
@@ -337,6 +338,7 @@
       const analytics = getAnalytics(app);
       const db = getFirestore(app);
       const collRef = collection(db, 'work-orders');
+      const metaRef = collection(db, 'meta');
       const recipientsRef = collection(db, 'recipients');
       const mailTrackerRef = collection(db, 'mail');
     
@@ -350,6 +352,7 @@
           recipients:[],
           switch1: false,
           accountNumber: '',
+          workOrderID: '',
           accountContact:{
               name: '',
               department: '',
@@ -383,7 +386,19 @@
         methods: {
           submitForm(){
             if (this.$refs.form.validate()){
-            
+
+              // update firestore metaRef.meta.latestId to this.workOrderID
+
+              updateDoc(doc(db, "meta", "meta"), {
+                latestId: this.workOrderID
+              });
+
+
+              
+
+
+
+
             addDoc(collRef, {
               accountNumber: this.accountNumber,
               accountContact:{
@@ -403,6 +418,10 @@
                 phone: this.contactInformation.phone,
                 email: this.contactInformation.email
               },
+              /** Set the WorkOrder ID to current two-digit year, two-digit-month, day, hour, minute, and second **/
+              workOrderID: this.workOrderID              
+
+              
             });
 
             addDoc(mailTrackerRef, {
@@ -410,7 +429,7 @@
               message: {
                 subject: `New COR2E Work Order Form Submission from ${this.accountContact.name} - ${this.accountContact.department}`,
                 html: `
-                  <h1>New Work Order</h1>
+                  <h1>New Work Order ${this.workOrderID}</h1>
                   <h2>Account Information</h2>
                   <strong>KFS Number:</strong> ${this.accountNumber} <br>
                   <strong>Name:</strong> ${this.accountContact.name} <br>
@@ -460,6 +479,19 @@
             });
             console.log("Current recipients: ", this.recipients.join(", "));
           });
+
+            // get the latest id from meta.meta.latestId
+            const docRef = doc(db, "meta", "meta");
+            const unsubscribe2 = onSnapshot(docRef, (doc) => {
+              if (doc.exists()) {
+                this.workOrderID = doc.data().latestId+1;
+                console.log("Adding work order with ID: ", this.workOrderID);
+              } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+              }
+            });
+
 
          }
       })
