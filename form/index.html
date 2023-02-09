@@ -41,7 +41,7 @@
             <h1 
             align="center"  
             class="white--text mb-2">COR&#178;E Tech Service Work Order Form</h1>
-            <h4 class="white--text" align="center">Last Updated: 08 Feb 2023</h4>
+            <h4 class="white--text" align="center">Last Updated: 09 Feb 2023</h4>
 
           <v-row justify="space-around">
 
@@ -173,7 +173,7 @@
               >
             </v-text-field>
             </v-row>
-            <v-row align="center">
+            <!-- <v-row align="center">
               <h3 class="pa-2 mt-4 mr-8">Cost Estimate (Optional)</h3>
               <v-text-field
               v-model="costEstimate"
@@ -182,7 +182,7 @@
               filled
               dense>
             </v-text-field>
-            </v-row>
+            </v-row> -->
             <v-row align="center">
               <h3 class="pa-2 mt-4 mr-8">TFS Unit</h3>
               <v-select
@@ -202,6 +202,18 @@
               dense>
             </v-text-field>
             </v-row>
+
+            <v-row align="center">
+              <v-text-field
+              v-model="makeModel"
+              class="pa-2 mt-4"
+              placeholder="Make/Model"
+              filled
+              dense>
+            </v-text-field>
+            </v-row>
+
+
             <v-row align="center">
               <v-textarea
               v-model="description"
@@ -349,6 +361,7 @@
       vuetify: new Vuetify(),
       data(){
         return{
+          prod:true,
           recipients:[],
           switch1: false,
           accountNumber: '',
@@ -368,6 +381,7 @@
               'Electronics / Office Equipment',
             ],
             location: '',
+            makeModel:'',
             description: '',
             contactInformation:{
               name:  '',
@@ -412,6 +426,7 @@
               costEstimate: this.costEstimate,
               tfsUnit: this.tfsUnit,
               location: this.location,
+              makeModel:this.makeModel,
               description: this.description,
               contactInformation:{
                 name: this.contactInformation.name,
@@ -442,6 +457,7 @@
                   <strong>Cost Estimate:</strong> ${this.costEstimate}<br>
                   <strong>TFS Unit:</strong> ${this.tfsUnit}<br>
                   <strong>Location:</strong> ${this.location}<br>
+                  <strong>Make/Model:</strong> ${this.makeModel}<br>
                   <strong>Description:</strong> ${this.description}<br>
                   <h2>Contact Information</h2>
                   <strong>Name:</strong> ${this.contactInformation.name}<br>
@@ -471,14 +487,30 @@
          mounted(){
           let arr = [];
 
-          const q = query(collection(db, "recipients"));
-          const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          /** Grab the list of recipients from Firestore **/
 
-            querySnapshot.forEach((doc) => {
-                this.recipients.push(doc.data().address);
+          // if it's prodmode
+          if(this.prod) {
+            const q = query(collection(db, "recipients"));
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+
+              querySnapshot.forEach((doc) => {
+                  this.recipients.push(doc.data().address);
+              });
+               console.log("Current recipients: ", this.recipients.join(", "));
             });
-            console.log("Current recipients: ", this.recipients.join(", "));
-          });
+          }
+
+          /** End of grabbing recipients from Firestore **/
+
+
+          if(!this.prod) {
+            console.log("DEV MODE!");
+            this.recipients = ['joel@uconn.edu'];
+             console.log("Current recipients: ", this.recipients.join(", "));
+          }
+
+         
 
             // get the latest id from meta.meta.latestId
             const docRef = doc(db, "meta", "meta");
